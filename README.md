@@ -1,10 +1,10 @@
 # UEAT API
 
 #### **1.  Image docker**
-I build the image docker: -t ernestoagc/ueat-api:0.2 .
+I build the image docker: -t ernestoagc/ueat-api:0.3 .
 
 also you can download these version on 
-docker pull ernestoagc/ueat-api:0.2
+docker pull ernestoagc/ueat-api:0.3
 
 ![](https://i.imgur.com/If1lZLE.jpg)
 
