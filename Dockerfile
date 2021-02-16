@@ -5,10 +5,9 @@ RUN chmod -R 777 ueat-api
 COPY pom.xml .
 RUN mvn -e -B dependency:resolve
 COPY src ./src
-#RUN mvn clean install -DskipTests=true
-RUN mvn clean install
+RUN mvn clean install -DskipTests=true
 
 FROM openjdk:11.0.8-jre-slim
-COPY --from=builder /app/target/soaint-api-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/ueat-api-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8500
 CMD ["java", "-jar","/app.jar"]
