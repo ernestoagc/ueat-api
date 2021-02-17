@@ -10,4 +10,7 @@ public interface ApplicationFormDao  extends PagingAndSortingRepository<Applicat
 
 	@Query("select r from ApplicationForm r")
 	public Page<ApplicationForm> getAllApplicationForm(Pageable pageable);
+	
+	@Query("select r from ApplicationForm r where r.position like %?1%")
+	public Page<ApplicationForm> getAllApplicationFormByPosition(String  position, Pageable pageable);
 }

@@ -40,5 +40,32 @@ public class UeatServiceImpl implements UeatService {
 		return  applicationFormDao.findAll(pageable);
 	}
 	
+	@Override
+	public Page<ApplicationForm> getAllApplicationFormByPositionPagination(String  position,Pageable pageable) {
+		// TODO Auto-generated method stub
+		return  applicationFormDao.getAllApplicationFormByPosition(position,pageable);
+	}
+	
+	
+	@Override
+	public ApplicationForm findById(long id) {
+		return  applicationFormDao.findById(id).orElse(null);
+	}
+	
+	
+	
+	@Override
+	public boolean deleteApplicationForm(Long id) {
+		
+		try {
+			applicationFormDao.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+		
+	}
+
+	
 
 }

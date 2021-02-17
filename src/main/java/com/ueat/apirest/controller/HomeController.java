@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+import com.ueat.apirest.exception.ValidacionException;
+import com.ueat.apirest.util.Constante;
 import com.ueat.apirest.model.ApplicationForm;
 import com.ueat.apirest.service.UeatService;
  
@@ -32,7 +35,7 @@ import com.ueat.apirest.service.UeatService;
 @CrossOrigin(origins="*")
 @RestController
 @RequestMapping(value="api/home")
-public class HomeController {
+public class HomeController extends BaseController {
 	
 
 	Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -45,9 +48,46 @@ public class HomeController {
 		
 		logger.info("===NEW APPLICATION FORM==== BEGIN ====");	   		
 		
+			if(applicationForm.getPosition()==null)  {
+			
+			throw new ValidacionException(Constante.CODIGOS_ERRORES.CAMPOS_OBLIGATORIOS,MessageFormat.format(Constante.MENSAJE_ERRORES.CAMPOS_OBLIGATORIOS,"nombre"));
+		}
+		
 		ApplicationForm newApplicationForm = ueatService.saveApplicationForm(applicationForm);
 		logger.info("===NEW APPLICATION FORM==== END ====");
 		return ResponseEntity.status(HttpStatus.OK).body(newApplicationForm);
+	}
+	
+	@GetMapping("/{id}")	
+	@ResponseBody
+	public ResponseEntity<?> getDetail(@PathVariable Long id) throws Exception{
+
+		logger.info("===GET APPLICATION FORM==== BEGIN ====");   		
+		ApplicationForm applicationForm =ueatService.findById(id);
+		
+		if(applicationForm==null) {
+			throw new ValidacionException(Constante.CODIGOS_ERRORES.NO_DEVOLVIO_RESULTADO_OK, new Object[]{});			
+		}
+		
+		logger.info("===GET APPLICATION FORM==== END ====");
+		return ResponseEntity.status(HttpStatus.OK).body(applicationForm);
+	}
+	
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> deleteApplicationForm(@PathVariable long id) 
+	{
+		logger.info("===ELIMINAR PRODUCTO==== INICIO ====");
+		ApplicationForm applicationForm =ueatService.findById(id);
+		
+		if(applicationForm==null) {
+			
+			throw new ValidacionException(Constante.CODIGOS_ERRORES.BAD_REQUEST,"Application does not exits");
+		}
+		
+		ueatService.deleteApplicationForm(applicationForm.getId());
+		logger.info("===ELIMINAR PRODUCTO==== INICIO ====");
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@GetMapping("/findall")	
@@ -65,17 +105,17 @@ public class HomeController {
 	@GetMapping("/page/{page}")	
 	@ResponseBody
 	public ResponseEntity<?> findAllPage(@PathVariable int page,@RequestParam Map<String,String> parametros) throws FileNotFoundException  {
-
-		logger.info("===LIST PAGE APPLICATION FORM==== BEGIN ====");    		
-		List<ApplicationForm> applicationFormList =ueatService.getAllApplicationForm();
 		
+		
+		logger.info("===LIST PAGE APPLICATION FORM==== BEGIN ====");		
+		String positionParameter =parametros.get("position")==null?"":parametros.get("position");
+		
+		logger.info("positionParameter: "+ positionParameter);
 
-		Page<ApplicationForm> listPaginable= ueatService.getAllApplicationFormPagination( PageRequest.of(page, 15));
+		Page<ApplicationForm> listPaginable= ueatService.getAllApplicationFormByPositionPagination(positionParameter, PageRequest.of(page, 15));
 		logger.info("===LIST PAGE APPLICATION FORM==== END ====");   
 		return ResponseEntity.status(HttpStatus.OK).body(listPaginable);
 		
-
-
 	}
 
 }

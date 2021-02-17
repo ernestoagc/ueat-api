@@ -1,7 +1,7 @@
 # UEAT API
 
 #### **1.  Image docker**
-I build the image docker: -t ernestoagc/ueat-api:0.3 .
+I build the image docker: docker build -t ernestoagc/ueat-api:0.3 .
 
 also you can download these version on 
 docker pull ernestoagc/ueat-api:0.3
@@ -31,4 +31,11 @@ c) Put mysql credentials:
  
  **Running container of application**
  execute: 
-*docker run -p 8700:8700  -d --link dbUeatTest:mysql  --network ueat-red  -e spring.profiles.active=test  --name=ueat-api ernestoagc/ueat-api:0.2*
+*docker run -p 8500:8500  -d --link dbUeatTest:mysql  --network ueat-red  -e spring.profiles.active=test  --name=ueat-api ernestoagc/ueat-api:0.2*
+
+
+
+#### **4. Executing Unit Test**
+I've Built for HomeController (HomeControllerTest.java) 5 unit test with mockito.
+
+![](https://i.imgur.com/le4teCQ.jpg)
